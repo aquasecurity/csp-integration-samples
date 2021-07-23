@@ -1,0 +1,11 @@
+node{
+  deleteDir()
+    stage ('clone')
+    {
+        sh 'git clone https://github.com/spulec/moto.git' 
+    }
+    stage ('scan-defaults') 
+    { 
+        aquaServerlessScanner codeScanPath: '', customFlags: '', notCompliesCmd: '', onDisallowed: 'ignore' 
+    }
+}

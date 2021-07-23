@@ -1,0 +1,7 @@
+timestamps {
+	node(){
+  		stage("Scan mongo"){
+      		aqua locationType: 'hosted', registry: 'Docker Hub', hostedImage: 'mongo', customFlags: '--layer-vulnerabilities', hideBase: false, notCompliesCmd: '', onDisallowed: 'fail', showNegligible: false
+          }
+   }
+}

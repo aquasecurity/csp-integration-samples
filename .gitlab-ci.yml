@@ -1,0 +1,32 @@
+stages:
+  - build
+  - scan
+image-build:
+  # Use the official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+  script:
+    - docker pull redis:latest
+
+scan-image:
+  image: docker:latest
+  stage: scan
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker pull registry.aquasec.com/scanner:6.0
+    - docker run --rm -v /tmp:/tmp -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:6.0 scan --register redis:latest --registry "Docker Hub" --host $AQUA_HOST --user $AQUA_USER --password  $AQUA_PASSWORD --show-negligible --htmlfile out.html --jsonfile out.json > /dev/null
+
+    # Copy artifacts to local directory
+    - cp /tmp/out.html /tmp/out.json .
+  artifacts:
+    paths:
+    - out.json
+    - out.html
+
