@@ -1,0 +1,29 @@
+name: scanner
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+env:
+  IMAGE: "nginx:perl"
+  REGISTRY: "Docker Hub"
+  BUILD_JOB_NAME: "Github-Action-Sample"
+  BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/
+  BUILD_NUMBER: ${{ github.run_id }}
+jobs:
+  scanner:
+    name: scanning-image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Aqua Credentials
+        run: |
+          wget --user ${{ secrets.AQUA_EMAIL }} --password ${{ secrets.AQUA_PASS }} https://download.aquasec.com/scanner/6.2.0/scannercli
+
+      - name: Aqua Scanner
+        run: |
+          chmod +x scannercli
+          ./scannercli scan -U ${{ secrets.AQUA_SERVER_USER }} -P ${{ secrets.AQUA_SERVER_PASS }} -H ${{ secrets.AQUA_SERVER }} ${{ env.IMAGE }} --registry "${{ env.REGISTRY }}"
