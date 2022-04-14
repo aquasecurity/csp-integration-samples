@@ -7,7 +7,7 @@
 function Download-Executable ($count){
     try{
         <# Port must be changed to 8443 for an on-premise installation #>
-        New-NetFirewallRule -DisplayName "Allow Outbound Port 443" -Direction Outbound -LocalPort 443 -Protocol RPC -Action Allow
+        New-NetFirewallRule -DisplayName "Allow Outbound Port 443" -Direction Outbound -LocalPort 443 -Protocol TCP -Action Allow
         New-NetFirewallRule -DisplayName "Allow Inbound Port 443" -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow
 
         $User = "<AQUA_USER>"
