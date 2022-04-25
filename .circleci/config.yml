@@ -1,0 +1,27 @@
+jobs:
+  build:
+    docker:
+      - image: docker:18.09-git
+    working_directory: /tmp/myscan # Define a working directory in order to retrieve artifacts
+    steps:
+      - checkout
+      - setup_remote_docker # Set up remote docker in order to use docker socket for CircleCI
+      - run:
+          name: Build image
+          command: docker build -t scannercli-ci-test:${CIRCLE_SHA1} .
+      - run:
+          name: Retrieve Aqua Scanner and scan build # CircleCI does not support volume mount for remote docker. Hence, we will need to output the scanned html to a file using ">" operator
+          command: |
+            mkdir scanresult
+            docker login registry.aquasec.com -u $AQUA_USER -p $AQUA_PASSWORD
+            docker run -v /var/run/docker.sock:/var/run/docker.sock registry.aquasec.com/scanner:6.5 scan -U $SCAN_USER -P $SCAN_PASSWORD -H $AQUA_HOST --local scannercli-ci-test:${CIRCLE_SHA1} --html > scanresult/scan.html 
+
+      - store_artifacts:
+          path: /tmp/myscan/scanresult # Retrieve all the output files in the scanresult folder created
+          destination: scanresult # Optional line. Set the output folder name as scanresult in the Artifacts tab
+workflows:
+  version: 2
+  release:
+    jobs:
+      - build:
+          context: my-scanner # Context set up in Organization Settings that contains the Environment Variables 
