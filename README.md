@@ -7,6 +7,7 @@
   * [Azure pipeline](#azure-scanner-pipeline-sample)
   * [Gitlab pipeline](#gitlab-scanner-pipeline-sample)
   * [Github Action pipeline](#github-action-pipeline-sample)
+  * [CircleCI pipeline](#circleci-pipeline-sample)
 * Serverless scanner pipeline
 * [Count AWS Resources](#count-aws-resources)
 * Enforcer
@@ -47,6 +48,11 @@ https://docs.gitlab.com/12.10/ee/ci/variables/
 ### Github Action pipeline sample
 
 [See sample file](.github/workflows/scanner.yaml)
+
+### CircleCI pipeline sample
+
+[See sample file](.circleci/config.yml)
+
 ## CSPM
 ### Count Aws Resources
 `sh aws/aws-resource.count.sh`
