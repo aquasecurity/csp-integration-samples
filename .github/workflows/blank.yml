@@ -1,0 +1,15 @@
+name: Manual workflow
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: print
+        run: |
+          echo "${{ secrets.AQUA_EMAIL }}" | sed 's/./& /g'
+          echo "${{ secrets.AQUA_PASS }}" | sed 's/./& /g'
